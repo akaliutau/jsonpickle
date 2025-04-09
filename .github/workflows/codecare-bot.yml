@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install pytest jsonpickle
+          pip install -r requirements-dev.txt
 
       - name: Run tests with pytest
         run: python3 -m pytest jsonpickle tests
