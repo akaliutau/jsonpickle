@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: '3.x'  # Or specify a specific version like '3.9'
 
-      - name: Install dependencies
+      - name: Run CodeCare
         run: |
           python3 -m pip install --upgrade pip
           pip install -r requirements-dev.txt
