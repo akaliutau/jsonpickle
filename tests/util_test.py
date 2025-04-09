@@ -56,10 +56,20 @@ def test_is_primitive_int():
 
 
 def test_is_primitive_float():
-    assert util.is_primitive(0)
+    assert util.is_primitive(0.0) # Corrected: use 0.0 for float zero
     assert util.is_primitive(3.5)
     assert util.is_primitive(-3.5)
     assert util.is_primitive(float(3))
+
+
+# Add test for complex primitive type
+def test_is_primitive_complex():
+    assert util.is_primitive(complex(1, 2))
+    assert util.is_primitive(complex(-1, -2))
+    assert util.is_primitive(complex(0, 0))
+    assert util.is_primitive(complex(1.5, -2.5))
+    assert util.is_primitive(3+4j)
+    assert util.is_primitive(0j)
 
 
 def test_is_primitive_long():
@@ -78,7 +88,7 @@ def test_is_primitive_None():
 def test_is_primitive_bytes():
     assert not util.is_primitive(b'hello')
     assert not util.is_primitive(b'foo')
-    assert util.is_primitive('foo')
+    assert util.is_primitive('foo') # str is primitive
 
 
 def test_is_primitive_unicode():
@@ -131,12 +141,18 @@ def test_is_list_other():
     assert not util.is_list(1)
     assert not util.is_set(1)
     assert not util.is_tuple(1)
+    # Add check for complex
+    assert not util.is_list(1+2j)
+    assert not util.is_set(1+2j)
+    assert not util.is_tuple(1+2j)
 
 
 def test_is_sequence_various():
     assert util.is_sequence([])
     assert util.is_sequence(tuple())
     assert util.is_sequence(set())
+    # Add check for complex (should not be a sequence)
+    assert not util.is_sequence(1+2j)
 
 
 def test_is_dictionary_dict():
@@ -156,6 +172,8 @@ def test_is_dictionary_primitive():
     assert not util.is_dictionary(int())
     assert not util.is_dictionary(None)
     assert not util.is_dictionary('')
+    # Add check for complex
+    assert not util.is_dictionary(1+2j)
 
 
 def test_is_dictionary_subclass_dict():
@@ -181,6 +199,8 @@ def test_is_noncomplex_time_struct():
 
 def test_is_noncomplex_other():
     assert not util.is_noncomplex('a')
+    # Add check for complex (should not be noncomplex in this context)
+    assert not util.is_noncomplex(1+2j)
 
 
 def test_is_function_builtins():
@@ -255,3 +275,5 @@ def test_importable_name():
     )
     assert util.importable_name(io_method_obj) == '_io.BytesIO.readline'
     assert util.importable_name(dict) == 'builtins.dict'
+    # Add check for complex type
+    assert util.importable_name(complex) == 'builtins.complex'
