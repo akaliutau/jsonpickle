@@ -5,7 +5,7 @@
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution.
 
-"""Helper functions for pickling and unpickling.  Most functions assist in
+"""Helper functions for pickling and unpickling. Most functions assist in
 determining the type of an object.
 """
 import base64
@@ -24,7 +24,8 @@ from . import tags
 _ITERATOR_TYPE = type(iter(''))
 SEQUENCES = (list, set, tuple)
 SEQUENCES_SET = {list, set, tuple}
-PRIMITIVES = {str, bool, int, float, type(None)}
+# Add complex to the set of primitive types
+PRIMITIVES = {str, bool, int, float, complex, type(None)}
 FUNCTION_TYPES = {
     types.FunctionType,
     types.MethodType,
@@ -143,10 +144,12 @@ def is_not_class(obj):
 
 def is_primitive(obj):
     """Helper method to see if the object is a basic data type. Unicode strings,
-    integers, longs, floats, booleans, and None are considered primitive
-    and will return True when passed into *is_primitive()*
+    integers, longs, floats, booleans, complex numbers, and None are considered
+    primitive and will return True when passed into *is_primitive()*
 
     >>> is_primitive(3)
+    True
+    >>> is_primitive(3+4j)
     True
     >>> is_primitive([4,4])
     False
@@ -382,7 +385,7 @@ def is_reducible(obj):
     # Condensing it into one line seems to save the parser a lot of time.
     # fmt: off
     # pylint: disable=line-too-long
-    if type(obj) in NON_REDUCIBLE_TYPES or obj is object or is_dictionary_subclass(obj) or isinstance(obj, types.ModuleType) or is_reducible_sequence_subclass(obj) or is_list_like(obj) or isinstance(getattr(obj, '__slots__', None), _ITERATOR_TYPE) or (is_type(obj) and obj.__module__ == 'datetime'):  # noqa: E501
+    if type(obj) in NON_REDUCIBLE_TYPES or obj is object or is_dictionary_subclass(obj) or isinstance(obj, types.ModuleType) or is_reducible_sequence_subclass(obj) or is_list_like(obj) or isinstance(getattr(obj, '__slots__', None), _ITERATOR_TYPE) or (is_type(obj) and obj.__module__ == 'datetime'): # noqa: E501
         return False
     # fmt: on
     return True
@@ -486,7 +489,7 @@ def translate_module_name(module):
     Prefer the more modern naming.
 
     This is used so that references to Python's `builtins` module can
-    be loaded in both Python 2 and 3.  We remap to the "__builtin__"
+    be loaded in both Python 2 and 3. We remap to the "__builtin__"
     name and unmap it when importing.
 
     Map the Python2 `exceptions` module to `builtins` because
