@@ -5,7 +5,7 @@ on:
     types: [assigned]
 
 jobs:
-  run_tests:
+  process_issue:
     runs-on: ubuntu-latest
     if: github.event.issue.assignees[0].login == 'maintenance-bot-v1'
 
